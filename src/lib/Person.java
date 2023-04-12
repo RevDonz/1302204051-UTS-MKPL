@@ -1,6 +1,6 @@
 package lib;
 
-public class Person {
+public class Person extends Family {
     public enum Gender {
         MALE, FEMALE
     }
@@ -14,6 +14,7 @@ public class Person {
     private boolean isForeigner;
     
     public Person(String employeeId, String firstName, String lastName, String idNumber, String address, Gender gender, boolean isForeigner) {
+        super();
         this.employeeId = employeeId;
         this.firstName = firstName;
         this.lastName = lastName;
