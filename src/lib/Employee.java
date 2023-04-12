@@ -11,31 +11,33 @@ public class Employee {
     private int otherMonthlyIncome;
     private int annualDeductible;
 
-    public Employee(Person person, LocalDate dateJoined, int monthWorkingInYear, int monthlySalary, int otherMonthlyIncome, int annualDeductible) {
+    public Employee(Person person, LocalDate dateJoined, int monthlySalary, int otherMonthlyIncome, int annualDeductible) {
         this.person = person;
         this.dateJoined = dateJoined;
-        this.monthWorkingInYear = monthWorkingInYear;
         this.monthlySalary = monthlySalary;
         this.otherMonthlyIncome = otherMonthlyIncome;
         this.annualDeductible = annualDeductible;
+
+        calculateMonthWorkingInYear();
     }
 
     public void setMonthlySalary(int grade) {
-        if (grade == 1) {
-            monthlySalary = 3000000;
-            if (person.isIsForeigner()) {
-                monthlySalary = (int)(3000000 * 1.5);
-            }
-        } else if (grade == 2) {
-            monthlySalary = 5000000;
-            if (person.isIsForeigner()) {
-                monthlySalary = (int)(3000000 * 1.5);
-            }
-        } else if (grade == 3) {
-            monthlySalary = 7000000;
-            if (person.isIsForeigner()) {
-                monthlySalary = (int)(3000000 * 1.5);
-            }
+        switch (grade) {
+            case 1:
+                monthlySalary = 3000000;
+                break;
+            case 2:
+                monthlySalary = 5000000;
+                break;
+            case 3:
+                monthlySalary = 7000000;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid grade value");
+        }
+
+        if (person.isIsForeigner()) {
+            monthlySalary = (int)(monthlySalary * 1.5);
         }
     }
 
@@ -48,7 +50,10 @@ public class Employee {
     }
 
     public int getAnnualIncomeTax() {
+        return TaxFunction.calculateTax(monthlySalary, otherMonthlyIncome, monthWorkingInYear, annualDeductible, person.getSpouseName().equals(""), person.getChildIdNumbers().size());
+    }
 
+    public void calculateMonthWorkingInYear() {
         //Menghitung berapa lama pegawai bekerja dalam setahun ini, jika pegawai sudah bekerja dari tahun sebelumnya maka otomatis dianggap 12 bulan.
         LocalDate date = LocalDate.now();
 
@@ -57,7 +62,5 @@ public class Employee {
         } else {
             monthWorkingInYear = 12;
         }
-
-        return TaxFunction.calculateTax(monthlySalary, otherMonthlyIncome, monthWorkingInYear, annualDeductible, person.getSpouseName().equals(""), person.getChildIdNumbers().size());
     }
 }
